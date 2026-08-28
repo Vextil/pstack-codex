@@ -1,0 +1,54 @@
+name: Sync upstream pstack
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Upstream branch, tag, or commit
+        required: false
+        default: main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      UPSTREAM_REF: ${{ inputs.ref || 'main' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Regenerate from upstream
+        run: ./scripts/sync_upstream.sh --ref "$UPSTREAM_REF"
+
+      - name: Install tool dependencies
+        working-directory: plugins/pstack-codex/skills/poteto-mode/scripts
+        run: bun install --frozen-lockfile
+
+      - name: Test and type-check
+        working-directory: plugins/pstack-codex/skills/poteto-mode/scripts
+        run: |
+          bun run test
+          bun run typecheck
+
+      - name: Open or update sync pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: automation/sync-pstack
+          delete-branch: true
+          commit-message: "chore: sync upstream pstack"
+          title: "chore: sync upstream pstack"
+          body: |
+            Automated native-port regeneration from `${{ env.UPSTREAM_REF }}`.
+
+            Review `UPSTREAM.json`, compatibility exclusions, converted skill
+            diffs, and CI before merging.

@@ -1,0 +1,13 @@
+{
+  "commit": "799151d91b6e12ee7dbd09f708eec108d7de9b3b",
+  "excluded": {
+    "automations/benny": "Cursor event-triggered automation bundle. Codex scheduled-task support needs a separate product-level design; it is not silently emulated.",
+    "docs/guide": "Cursor UI tutorial and screenshots. The native Codex README documents the install and invocation surface instead.",
+    "skills/grokbot/make-bot-ui": "Requires a Cursor Automations webhook, for which Codex has no portable public-plugin equivalent."
+  },
+  "ref": "799151d91b6e12ee7dbd09f708eec108d7de9b3b",
+  "repository": "https://github.com/cursor/plugins",
+  "sourceSha256": "f94e50ed0ba6703dd05c9b52fb0f4645ece6906d5234aa394c6d1fb986b65ef1",
+  "subdirectory": "pstack",
+  "version": "0.14.4"
+}

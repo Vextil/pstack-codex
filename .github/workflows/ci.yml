@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Validate generated plugin
+        run: python3 scripts/validate_port.py
+
+      - name: Install tool dependencies
+        working-directory: plugins/pstack-codex/skills/poteto-mode/scripts
+        run: bun install --frozen-lockfile
+
+      - name: Test bundled tools
+        working-directory: plugins/pstack-codex/skills/poteto-mode/scripts
+        run: bun run test
+
+      - name: Type-check bundled tools
+        working-directory: plugins/pstack-codex/skills/poteto-mode/scripts
+        run: bun run typecheck

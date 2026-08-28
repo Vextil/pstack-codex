@@ -1,0 +1,40 @@
+{
+  "name": "pstack-codex",
+  "version": "0.14.4-codex.1",
+  "description": "Native Codex port of pstack: rigorous engineering workflows, deliberate parallelism, concise prose, simple code, and verified delivery.",
+  "author": {
+    "name": "Vextil and pstack Codex contributors",
+    "url": "https://github.com/Vextil/pstack-codex"
+  },
+  "homepage": "https://github.com/Vextil/pstack-codex#readme",
+  "repository": "https://github.com/Vextil/pstack-codex",
+  "license": "MIT",
+  "keywords": [
+    "pstack",
+    "poteto-mode",
+    "codex",
+    "workflow",
+    "review",
+    "subagents"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "pstack for Codex",
+    "shortDescription": "Go deep first: rigorous, parallelizable engineering workflows",
+    "longDescription": "A native Codex port of Lauren Tan's pstack. It packages poteto-mode, architecture exploration, adversarial review, root-cause debugging, technical writing, and verification as first-class Codex skills.",
+    "developerName": "Vextil and pstack Codex contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/Vextil/pstack-codex",
+    "defaultPrompt": [
+      "Work on this with $poteto-mode.",
+      "Use $interrogate to stress-test this diff.",
+      "Use $how to explain this subsystem."
+    ],
+    "brandColor": "#7C3AED"
+  }
+}
