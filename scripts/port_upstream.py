@@ -29,6 +29,10 @@ EXCLUDED = {
         "Cursor event-triggered automation bundle. Codex scheduled-task support "
         "needs a separate product-level design; it is not silently emulated."
     ),
+    "skills/make-bot-ui": (
+        "Requires a Cursor Automations webhook, for which Codex has no portable "
+        "public-plugin equivalent."
+    ),
     "skills/grokbot/make-bot-ui": (
         "Requires a Cursor Automations webhook, for which Codex has no portable "
         "public-plugin equivalent."
@@ -659,10 +663,20 @@ def build(source_repo: Path, source_ref: str = "main") -> None:
 
     upstream_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     version = upstream_manifest["version"]
+    excluded_source_paths = {(source / path).resolve() for path in EXCLUDED}
+
+    def ignore_excluded(directory: str, names: list[str]) -> set[str]:
+        directory_path = Path(directory).resolve()
+        return {
+            name
+            for name in names
+            if (directory_path / name).resolve() in excluded_source_paths
+        }
+
     skill_names = {
         path.parent.name
         for path in (source / "skills").rglob("SKILL.md")
-        if "grokbot/make-bot-ui" not in path.as_posix()
+        if not any(path.resolve().is_relative_to(excluded) for excluded in excluded_source_paths)
     }
     skill_names.update({"comment-sicko", "poteto-agent", "deslop"})
 
@@ -676,7 +690,7 @@ def build(source_repo: Path, source_ref: str = "main") -> None:
             source / "skills",
             temp_skills,
             dirs_exist_ok=True,
-            ignore=shutil.ignore_patterns("grokbot"),
+            ignore=ignore_excluded,
         )
         shutil.copytree(source / "docs" / "guide", temp_plugin / "docs" / "guide")
         shutil.copytree(source / "agents", temp_plugin / "_agents-source")
