@@ -221,6 +221,45 @@ def main() -> int:
     if not runtime.is_file():
         fail("missing native Codex runtime contract", errors)
 
+    panel_roster = (
+        "`gpt-5.6-sol` at `xhigh`, `gpt-5.6-terra` at `xhigh`, "
+        "`gpt-5.6-luna` at `xhigh`, `gpt-5.5` at `xhigh`"
+    )
+    for relative in (
+        "architect/SKILL.md",
+        "arena/SKILL.md",
+        "how/SKILL.md",
+    ):
+        path = SKILLS / relative
+        if path.is_file() and panel_roster not in path.read_text(encoding="utf-8"):
+            fail(f"{path.relative_to(ROOT)}: four-family panel roster drifted", errors)
+
+    interrogate = SKILLS / "interrogate" / "SKILL.md"
+    if interrogate.is_file():
+        interrogate_text = interrogate.read_text(encoding="utf-8")
+        for model in (
+            "`gpt-5.6-sol` at `xhigh`",
+            "`gpt-5.6-terra` at `xhigh`",
+            "`gpt-5.6-luna` at `xhigh`",
+            "`gpt-5.5` at `xhigh`",
+        ):
+            if model not in interrogate_text:
+                fail(
+                    f"{interrogate.relative_to(ROOT)}: panel is missing {model}",
+                    errors,
+                )
+
+    stale_effort = re.compile(r"`gpt-5\.6-(?:sol|luna)` at `(?:max|high)`")
+    for path in sorted(PLUGIN.rglob("*")):
+        if not path.is_file() or path.suffix not in {".md", ".mjs"}:
+            continue
+        match = stale_effort.search(path.read_text(encoding="utf-8"))
+        if match:
+            fail(
+                f"{path.relative_to(ROOT)}: stale model effort {match.group(0)!r}",
+                errors,
+            )
+
     if errors:
         print("validation failed:", file=sys.stderr)
         for error in errors:

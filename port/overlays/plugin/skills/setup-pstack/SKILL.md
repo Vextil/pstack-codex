@@ -6,8 +6,9 @@ description: Configure Codex models and reasoning effort for pstack roles. Use f
 # Setup pstack
 
 Create or update `~/.codex/pstack-models.json`. This is a pstack-owned override
-file, not Codex's main configuration. Skills fall back to the parent model when
-the file or a role is absent.
+file, not Codex's main configuration. An absent role uses the built-in pstack
+default. `inherit-parent`, `auto`, or an unavailable configured model uses the
+parent model instead.
 
 ## Steps
 
@@ -55,20 +56,23 @@ architect-runners
 interrogate-reviewers
 ```
 
-Panel roles contain lists. Their list length is the fan-out count. Single-model
-roles contain one object or `"inherit-parent"`.
+Panel roles contain lists. Their list length is the fan-out count. The one
+exception is `arena-cross-judge`: its list is a selection pool, and Arena
+spawns one judge from it, preferring a model family different from the parent's.
+The pool order does not imply priority. Single-model roles contain one object
+or `"inherit-parent"`.
 
 ## Example
 
 ```json
 {
   "roles": {
-    "bug-fix": {"model": "gpt-5.6-sol", "reasoning_effort": "max"},
-    "swarm-workers": {"model": "gpt-5.6-luna", "reasoning_effort": "high"},
+    "bug-fix": {"model": "gpt-5.6-sol", "reasoning_effort": "xhigh"},
+    "swarm-workers": {"model": "gpt-5.6-luna", "reasoning_effort": "xhigh"},
     "interrogate-reviewers": [
-      {"model": "gpt-5.6-sol", "reasoning_effort": "max"},
+      {"model": "gpt-5.6-sol", "reasoning_effort": "xhigh"},
       {"model": "gpt-5.6-terra", "reasoning_effort": "xhigh"},
-      {"model": "gpt-5.6-luna", "reasoning_effort": "high"},
+      {"model": "gpt-5.6-luna", "reasoning_effort": "xhigh"},
       {"model": "gpt-5.5", "reasoning_effort": "xhigh"}
     ]
   }

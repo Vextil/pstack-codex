@@ -42,6 +42,20 @@ There is intentionally no `commands/` directory, `.codex-plugin/prompts`
 directory, Claude settings file, command router, or shared cross-host skill
 tree.
 
+## Model policy
+
+Single-worker roles map upstream judgment and implementation models to
+`gpt-5.6-sol` at `xhigh`, and upstream fast fan-out models to `gpt-5.6-luna`
+at `xhigh`. The current upstream version does not use its Composer model slot,
+but the converter maps it to Luna for forward compatibility.
+
+Upstream intentionally uses four model families for independent candidates and
+reviewers. Arena, Architect, Interrogate, and How critics therefore preserve a
+four-family Codex roster: Sol, Terra, Luna, and GPT-5.5, all at `xhigh`. Arena's
+cross-judge uses the same roster as a selection pool, spawns one judge, and
+prefers a family different from the parent. This panel-specific policy prevents
+the single-worker mapping from collapsing upstream's diversity.
+
 ## Semantic overlays
 
 The overlay layer contains independently authored Codex behavior for:

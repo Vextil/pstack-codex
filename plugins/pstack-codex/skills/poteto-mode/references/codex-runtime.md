@@ -37,11 +37,11 @@ specification or a list of them:
 ```json
 {
   "roles": {
-    "how-explorer": {"model": "gpt-5.6-luna", "reasoning_effort": "high"},
+    "how-explorer": {"model": "gpt-5.6-luna", "reasoning_effort": "xhigh"},
     "interrogate-reviewers": [
-      {"model": "gpt-5.6-sol", "reasoning_effort": "max"},
+      {"model": "gpt-5.6-sol", "reasoning_effort": "xhigh"},
       {"model": "gpt-5.6-terra", "reasoning_effort": "xhigh"},
-      {"model": "gpt-5.6-luna", "reasoning_effort": "high"},
+      {"model": "gpt-5.6-luna", "reasoning_effort": "xhigh"},
       {"model": "gpt-5.5", "reasoning_effort": "xhigh"}
     ]
   }
@@ -50,16 +50,18 @@ specification or a list of them:
 
 Omit `model` and `reasoning_effort` when a role says `"inherit-parent"` or when
 the configured value is unavailable. Never invent a model slug. The portable
-fallback is the parent model. For a panel, use distinct available Codex models
-when possible; otherwise vary reasoning effort and disclose that model
-diversity was reduced.
+fallback is the parent model. Preserve the four-family roster for Arena,
+Architect, Interrogate, and How critics when those models are available. The
+Arena cross-judge uses that same roster as a selection pool: spawn one judge,
+preferably from a model family different from the parent's. Otherwise use
+independent available samples and disclose that model diversity was reduced.
 
 Recommended defaults, only when the current host confirms they are available:
 
-- Fast/mechanical: `gpt-5.6-luna`, `high`.
-- Balanced exploration and judgment: `gpt-5.6-terra`, `xhigh`.
-- Deep implementation: `gpt-5.6-sol`, `max`.
-- Adversarial alternate: `gpt-5.5`, `xhigh`.
+- Fast/mechanical: `gpt-5.6-luna`, `xhigh`.
+- Judgment, synthesis, and deep implementation: `gpt-5.6-sol`, `xhigh`.
+- Four-family panels and the cross-judge pool: `gpt-5.6-sol`,
+  `gpt-5.6-terra`, `gpt-5.6-luna`, and `gpt-5.5`, all at `xhigh`.
 
 ## Questions
 

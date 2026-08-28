@@ -120,7 +120,7 @@ Launch all matching investigators back-to-back before waiting so they run concur
 
 Subagent config (each):
 - Tool: `spawn_agent`
-- `model`: your configured why-investigators model (default `gpt-5.6-luna` at `high`)
+- `model`: your configured why-investigators model (default `gpt-5.6-luna` at `xhigh`)
 - Tool access: retain normal Codex tools and connectors; the brief forbids writes.
 
 Each investigator gets:
@@ -166,7 +166,7 @@ If your scope assessment suggests a single-commit trivial target where the PR de
 Spawn one synthesizer subagent:
 
 - Tool: `spawn_agent`
-- `model`: your configured why-synthesizer model (default `gpt-5.6-terra` at `xhigh`)
+- `model`: your configured why-synthesizer model (default `gpt-5.6-sol` at `xhigh`)
 - Tool access: retain normal Codex tools and connectors; the brief forbids writes.
 
 The synthesizer gets:

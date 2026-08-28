@@ -11,6 +11,9 @@ changes. Read `../poteto-mode/references/codex-runtime.md` before delegating.
 Use this after a complex task landed, a dead end exposed a reusable better path,
 or the user corrected the approach. Skip trivial and one-off work.
 
+Unless configured otherwise, all four Reflect roles use `gpt-5.6-sol` at
+`xhigh`, matching the native single-worker model policy.
+
 ## Process
 
 1. Obtain the current task through Codex task-history tools when available. If

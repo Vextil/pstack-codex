@@ -22,7 +22,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "pstack-codex"
 OVERLAY_ROOT = REPO_ROOT / "port" / "overlays" / "plugin"
-CODEX_REVISION = 1
+CODEX_REVISION = 2
 
 EXCLUDED = {
     "automations/benny": (
@@ -40,11 +40,29 @@ EXCLUDED = {
 }
 
 MODEL_REPLACEMENTS = {
-    "claude-fable-5-thinking-max": "gpt-5.6-terra` at `xhigh",
-    "gpt-5.6-sol-max": "gpt-5.6-sol` at `max",
-    "grok-4.6-fast-xhigh": "gpt-5.6-luna` at `high",
+    "claude-fable-5-thinking-max": "gpt-5.6-sol` at `xhigh",
+    "gpt-5.6-sol-max": "gpt-5.6-sol` at `xhigh",
+    "grok-4.6-fast-xhigh": "gpt-5.6-luna` at `xhigh",
+    "claude-opus-5-thinking-xhigh": "gpt-5.6-sol` at `xhigh",
+    "composer-2.5-fast": "gpt-5.6-luna` at `xhigh",
+}
+
+# Upstream intentionally uses four different model families for independent
+# candidates and reviewers. Preserve that behavior instead of collapsing every
+# panel slot through the single-worker cost/performance map above.
+PANEL_MODEL_REPLACEMENTS = {
+    "claude-fable-5-thinking-max": "gpt-5.6-sol` at `xhigh",
+    "gpt-5.6-sol-max": "gpt-5.6-terra` at `xhigh",
+    "grok-4.6-fast-xhigh": "gpt-5.6-luna` at `xhigh",
     "claude-opus-5-thinking-xhigh": "gpt-5.5` at `xhigh",
-    "composer-2.5-fast": "gpt-5.6-luna` at `high",
+    "composer-2.5-fast": "gpt-5.6-luna` at `xhigh",
+}
+
+PANEL_MODEL_PATHS = {
+    "skills/architect/SKILL.md",
+    "skills/arena/SKILL.md",
+    "skills/how/SKILL.md",
+    "skills/interrogate/SKILL.md",
 }
 
 LITERAL_REPLACEMENTS = (
@@ -199,7 +217,7 @@ PATH_REPLACEMENTS: dict[str, tuple[tuple[str, str], ...]] = {
             "**Act autonomously inside the user's scope.** Use read-only tools freely and carry out reversible repository work that the request authorizes. External writes such as chat messages, ticket updates, eval launches, PR merges, and deployments require the user's request to place that action in scope; the mode never broadens authorization.\n\n**Always pause** for irreversible or high-impact writes: force-pushes to shared branches, deployments, data deletion, customer messages, and destructive cleanup whose exact target is unclear.",
         ),
         (
-            "**Use `delegation role: \"poteto-agent\"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `$poteto-mode` and `poteto-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `delegation role` for diverse-model review; respect what the skill prescribes, don't override to `poteto-agent`.\n\n**Defaults for every `spawn_agent` call.** asynchronously, agent mode (read-only strips MCP), file pointers not inlined context, explicit model per role (configurable via `$setup-pstack`; defaults `gpt-5.6-luna` at `high` for code, `gpt-5.6-terra` at `xhigh` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`gpt-5.6-terra` at `xhigh`) when the task needs judgment or the intent is vague, and to your strongest instruction-following model (`gpt-5.6-sol` at `max`) when the work is a precisely specified sequence of steps to execute to the letter; trivial mechanical edits go to your fast code model. Per-role lines in the `$setup-pstack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit the model override).",
+            "**Use `delegation role: \"poteto-agent\"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `$poteto-mode` and `poteto-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `delegation role` for diverse-model review; respect what the skill prescribes, don't override to `poteto-agent`.\n\n**Defaults for every `spawn_agent` call.** asynchronously, agent mode (read-only strips MCP), file pointers not inlined context, explicit model per role (configurable via `$setup-pstack`; defaults `gpt-5.6-luna` at `xhigh` for code, `gpt-5.6-sol` at `xhigh` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`gpt-5.6-sol` at `xhigh`) when the task needs judgment or the intent is vague, and to your strongest instruction-following model (`gpt-5.6-sol` at `xhigh`) when the work is a precisely specified sequence of steps to execute to the letter; trivial mechanical edits go to your fast code model. Per-role lines in the `$setup-pstack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit the model override).",
             "**For a playbook subagent that should use poteto's full style, tell it to invoke `$poteto-mode` before acting.** Routed workflow skills (`$how`, `$why`, `$interrogate`, `$reflect`, `$swarm`) provide their own focused briefs; respect those briefs instead of adding the full wrapper.\n\n**Defaults for every `spawn_agent` call.** Spawn asynchronously, pass file pointers instead of inlining bulk context, isolate every writer in its own worktree or disjoint path, and keep read-only reviewers on a no-write brief. Resolve model and reasoning effort through `references/codex-runtime.md` and `$setup-pstack`. Omit overrides when a configured model is unavailable; never invent a slug.",
         ),
     ),
@@ -457,7 +475,7 @@ def transform_script_text(relative_path: str, text: str) -> str:
     if relative_path == "skills/poteto-mode/scripts/check-plan.mjs":
         text = text.replace(
             "`grok-4.6-fast-xhigh`",
-            "`gpt-5.6-luna` at `high`",
+            "`gpt-5.6-luna` at `xhigh`",
         )
         text = text.replace('"/goal"', '"standing objective"')
     return text
@@ -466,7 +484,12 @@ def transform_script_text(relative_path: str, text: str) -> str:
 def transform_text(relative_path: str, text: str, skill_names: set[str]) -> tuple[str, bool]:
     text, explicit_only = normalize_frontmatter(text)
     text = replace_skill_invocations(text, skill_names)
-    for old, new in MODEL_REPLACEMENTS.items():
+    model_replacements = (
+        PANEL_MODEL_REPLACEMENTS
+        if relative_path in PANEL_MODEL_PATHS
+        else MODEL_REPLACEMENTS
+    )
+    for old, new in model_replacements.items():
         text = text.replace(f"`{old}`", f"`{new}`")
         text = text.replace(old, new.replace("`", ""))
     for old, new in LITERAL_REPLACEMENTS:

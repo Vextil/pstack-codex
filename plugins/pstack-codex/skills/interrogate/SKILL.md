@@ -39,9 +39,9 @@ Launch all reviewers back-to-back before waiting using Codex's collaboration too
 
 | Subagent | Default model |
 |----------|---------------|
-| Reviewer A | `gpt-5.6-terra` at `xhigh` |
-| Reviewer B | `gpt-5.6-sol` at `max` |
-| Reviewer C | `gpt-5.6-luna` at `high` |
+| Reviewer A | `gpt-5.6-sol` at `xhigh` |
+| Reviewer B | `gpt-5.6-terra` at `xhigh` |
+| Reviewer C | `gpt-5.6-luna` at `xhigh` |
 | Reviewer D | `gpt-5.5` at `xhigh` |
 
 For each reviewer:

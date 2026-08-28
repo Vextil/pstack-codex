@@ -1,6 +1,6 @@
 {
   "name": "pstack-codex",
-  "version": "0.14.4-codex.1",
+  "version": "0.14.4-codex.2",
   "description": "Native Codex port of pstack: rigorous engineering workflows, deliberate parallelism, concise prose, simple code, and verified delivery.",
   "author": {
     "name": "Vextil and pstack Codex contributors",
