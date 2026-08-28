@@ -103,7 +103,13 @@ def main() -> int:
     manifest_path = PLUGIN / ".codex-plugin" / "plugin.json"
     marketplace_path = ROOT / ".agents" / "plugins" / "marketplace.json"
     upstream_path = ROOT / "UPSTREAM.json"
-    for required in (manifest_path, marketplace_path, upstream_path, PLUGIN / "LICENSE"):
+    for required in (
+        manifest_path,
+        marketplace_path,
+        upstream_path,
+        PLUGIN / "LICENSE",
+        PLUGIN / "docs" / "guide" / "README.md",
+    ):
         if not required.is_file():
             fail(f"missing required file: {required.relative_to(ROOT)}", errors)
 

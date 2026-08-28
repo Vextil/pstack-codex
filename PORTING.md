@@ -35,6 +35,7 @@ handled explicitly rather than emulated.
 | explicit-only skill metadata | `skills/*/agents/openai.yaml` policy |
 | `agents/poteto-agent.md` | `skills/poteto-agent/SKILL.md` |
 | `agents/comment-sicko.md` | `skills/comment-sicko/SKILL.md` |
+| `docs/guide/*` | `docs/guide/*` with Codex transforms and overlays |
 | host slash invocations | `$skill-name` invocations |
 | delegation and task primitives | `poteto-mode/references/codex-runtime.md` |
 
@@ -70,6 +71,11 @@ The overlay layer contains independently authored Codex behavior for:
   delegation, questions, waiting, model availability, and task history.
 - `worktree-audit.sh`: repository-based checks without undocumented session
   storage.
+- `docs/guide/01-setup.md`, `07-overnight.md`, and `09-make-it-yours.md`:
+  Codex-native installation, task scheduling, history, and skill-authoring
+  guidance.
+- `docs/guide/images/*`: upstream illustrations with host command labels and
+  mascots translated to Codex skill, heartbeat, and pet terminology.
 
 Prefer a narrow overlay over a large fork. If a semantic transform applies to
 many upstream files, promote it into the converter and add a validation rule.

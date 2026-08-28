@@ -2,7 +2,6 @@
   "commit": "799151d91b6e12ee7dbd09f708eec108d7de9b3b",
   "excluded": {
     "automations/benny": "Cursor event-triggered automation bundle. Codex scheduled-task support needs a separate product-level design; it is not silently emulated.",
-    "docs/guide": "Cursor UI tutorial and screenshots. The native Codex README documents the install and invocation surface instead.",
     "skills/grokbot/make-bot-ui": "Requires a Cursor Automations webhook, for which Codex has no portable public-plugin equivalent."
   },
   "ref": "799151d91b6e12ee7dbd09f708eec108d7de9b3b",

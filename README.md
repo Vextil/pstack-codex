@@ -44,6 +44,9 @@ $how explain how this subsystem works
 $setup-pstack configure the optional pstack model roles
 ```
 
+The generated plugin also includes the upstream tutorial, translated for
+native Codex behavior: [read the pstack guide](plugins/pstack-codex/docs/guide/README.md).
+
 ## Update from upstream
 
 Pull and regenerate from the latest upstream `main`:
@@ -90,11 +93,10 @@ rather than hand-editing generated files.
 
 ## Compatibility boundary
 
-Three upstream components are deliberately excluded:
+Two upstream components are deliberately excluded:
 
 - `automations/benny`, because its event automation needs a separate Codex
   product-level design.
-- `docs/guide`, because it is a host-specific UI tutorial.
 - `skills/grokbot/make-bot-ui`, because it depends on a host automation webhook
   without a portable public-plugin equivalent.
 

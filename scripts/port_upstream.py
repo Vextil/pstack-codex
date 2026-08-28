@@ -22,16 +22,12 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "pstack-codex"
 OVERLAY_ROOT = REPO_ROOT / "port" / "overlays" / "plugin"
-CODEX_REVISION = 2
+CODEX_REVISION = 3
 
 EXCLUDED = {
     "automations/benny": (
         "Cursor event-triggered automation bundle. Codex scheduled-task support "
         "needs a separate product-level design; it is not silently emulated."
-    ),
-    "docs/guide": (
-        "Cursor UI tutorial and screenshots. The native Codex README documents "
-        "the install and invocation surface instead."
     ),
     "skills/grokbot/make-bot-ui": (
         "Requires a Cursor Automations webhook, for which Codex has no portable "
@@ -363,6 +359,57 @@ PATH_REPLACEMENTS: dict[str, tuple[tuple[str, str], ...]] = {
             "two independent agents",
         ),
     ),
+    "docs/guide/03-understand.md": (
+        (
+            "[`$recall`](../../skills/recall/SKILL.md) mines your own recent chats plus "
+            "the shared record (issues, prior fixes, errors still firing) and hands back a "
+            "brief on where things stand and what's next. Use it when you're returning to a "
+            "topic cold. If you want to resume one specific chat, that's the Session pickup "
+            "playbook below, not `$recall`.",
+            "[`$recall`](../../skills/recall/SKILL.md) reads Codex task history scoped to the "
+            "active project when task tools are available, then cross-checks the shared "
+            "record (issues, prior fixes, errors still firing). If task history is unavailable, "
+            "it uses the current task, git and PR state, decision trails, and links you provide. "
+            "Use it when you're returning to a topic cold. If you want to resume one specific "
+            "task, that's the Session pickup playbook below, not `$recall`.",
+        ),
+    ),
+    "docs/guide/02-poteto-mode.md": (
+        ("A long chat accumulates", "A long Codex task accumulates"),
+        ("which chats still touch it", "which tasks still touch it"),
+    ),
+    "docs/guide/05-build-and-clean.md": (
+        (
+            "`$deslop` ships in the `available Codex tooling` plugin, not in pstack. If you "
+            "don't have it, ask for the same outcome in plain words: remove narrating comments, "
+            "unsupported guards, dead compatibility paths, and unrelated edits.",
+            "`$deslop` ships with pstack-codex. It removes narrating comments, unsupported "
+            "guards, dead compatibility paths, and unrelated edits.",
+        ),
+        (
+            "[Comment Sicko](../../agents/comment-sicko.md)",
+            "[Comment Sicko](../../skills/comment-sicko/SKILL.md)",
+        ),
+    ),
+    "docs/guide/08-principles.md": (
+        (
+            "[Never Block on the Human](../../skills/principle-never-block-on-the-human/SKILL.md) "
+            "proceeds on reversible work and presents the result.",
+            "[Never Block on the Human](../../skills/principle-never-block-on-the-human/SKILL.md) "
+            "proceeds on authorized reversible work and presents the result.",
+        ),
+    ),
+    "docs/guide/10-recipes-and-pitfalls.md": (
+        (
+            '"make it better" gives `Codex heartbeat automation` nothing to check.',
+            '"make it better" gives a long-running task or heartbeat nothing to check.',
+        ),
+        (
+            "pinned cards reading $how, $tdd, and Codex heartbeat automation above",
+            "pinned cards reading $how, $tdd, and HEARTBEAT above",
+        ),
+        ("parent chat model", "parent task model"),
+    ),
 }
 
 RUNTIME_AWARE = {
@@ -631,6 +678,7 @@ def build(source_repo: Path, source_ref: str = "main") -> None:
             dirs_exist_ok=True,
             ignore=shutil.ignore_patterns("grokbot"),
         )
+        shutil.copytree(source / "docs" / "guide", temp_plugin / "docs" / "guide")
         shutil.copytree(source / "agents", temp_plugin / "_agents-source")
         shutil.copytree(source / "agents", temp_skills / "_agent-conversion-source")
 
